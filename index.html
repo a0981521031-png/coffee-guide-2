@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>手沖咖啡使用說明書</title>
+<style>
+:root{--bg:#e9eff0;--ink:#12343b;--sub:#4b6970;--line:#b9cbce;--card:#f6f9f9;--acc:#c8501e;--acc-ink:#fff;--water:#3d8fa3}
+@media (prefers-color-scheme:dark){:root{--bg:#0f2226;--ink:#e3eef0;--sub:#93b0b6;--line:#27454b;--card:#163037;--acc:#f0a04b;--acc-ink:#1a1206;--water:#5fb4c8}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;line-height:1.75}
+main{max-width:880px;margin:0 auto;padding:0 20px 80px}
+header{padding:64px 0 32px}
+h1{font-family:"Noto Serif TC","Songti TC",serif;font-size:clamp(2.2rem,7vw,3.8rem);line-height:1.15;margin:0 0 16px;letter-spacing:.04em}
+header p{max-width:34em;color:var(--sub);font-size:1.1rem;margin:0}
+section{margin-top:56px}
+h2{font-family:"Noto Serif TC","Songti TC",serif;font-size:1.6rem;margin:0 0 6px}
+.lead{color:var(--sub);margin:0 0 20px}
+.lab{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+@media(max-width:640px){.lab{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.clock{font-size:3.4rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.target{font-size:1.25rem;margin:10px 0 4px}
+.hint{color:var(--sub);min-height:3.4em;margin:0 0 14px}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--ink);padding:9px 18px}
+button.main{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);font-weight:700}
+button:focus-visible,input:focus-visible{outline:3px solid var(--water);outline-offset:2px}
+svg{width:100%;max-width:260px;display:block;margin:0 auto}
+.steps{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.steps button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.stepbody h3{margin:0 0 8px;font-size:1.3rem}
+.stepbody ul{margin:8px 0 0;padding-left:1.2em}
+.calc label{display:block;margin-bottom:6px}
+.calc input[type=range]{width:100%;accent-color:var(--acc)}
+.out{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;text-align:center}
+.out b{display:block;font-size:1.8rem}
+.out span{color:var(--sub);font-size:.9rem}
+dl{margin:0}
+dt{font-weight:700;margin-top:16px}
+dd{margin:2px 0 0;color:var(--sub)}
+footer{margin-top:64px;color:var(--sub);font-size:.9rem}
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1>手沖咖啡<br>使用說明書</h1>
+<p>第一次拿到濾杯和一包豆子也不用怕。照著下面的步驟，約 3 分鐘就能沖出一杯乾淨好喝的咖啡。</p>
+</header>
+
+<section aria-labelledby="t1">
+<h2 id="t1">跟著計時器沖一杯</h2>
+<p class="lead">按下「開始」，畫面會告訴你現在該注水到幾公克。</p>
+<div class="lab">
+<svg viewBox="0 0 200 240" role="img" aria-label="濾杯與咖啡壺的水位示意圖">
+<path d="M40 40h120l-30 70H70z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+<clipPath id="cup"><path d="M55 140h90l-8 80a10 10 0 0 1-10 8H73a10 10 0 0 1-10-8z"/></clipPath>
+<rect id="fill" x="40" y="228" width="120" height="0" fill="var(--water)" clip-path="url(#cup)"/>
+<path d="M55 140h90l-8 80a10 10 0 0 1-10 8H73a10 10 0 0 1-10-8z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+<path d="M145 155h18a14 14 0 0 1 0 34h-12" fill="none" stroke="currentColor" stroke-width="4"/>
+<circle id="drop" cx="100" cy="118" r="5" fill="var(--water)" opacity="0"/>
+</svg>
+<div class="panel" aria-live="polite">
+<div class="clock" id="clock">0:00</div>
+<div class="target" id="target">目標水量：0 g</div>
+<p class="hint" id="hint">準備好器具後，按開始。</p>
+<button class="main" id="go">開始</button>
+<button id="reset">重設</button>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="t2">
+<h2 id="t2">六個步驟</h2>
+<p class="lead">點選步驟查看細節。</p>
+<div class="steps" role="tablist" id="tabs"></div>
+<div class="panel stepbody" id="stepbody" role="tabpanel"></div>
+</section>
+
+<section aria-labelledby="t3">
+<h2 id="t3">粉水比計算機</h2>
+<p class="lead">拖動滑桿選擇咖啡粉量，自動算出水量。</p>
+<div class="panel calc">
+<label for="g">咖啡粉：<b id="gv">15</b> g</label>
+<input id="g" type="range" min="10" max="40" value="15">
+<label for="r" style="margin-top:14px">粉水比 1：<b id="rv">16</b></label>
+<input id="r" type="range" min="14" max="18" value="16">
+<div class="out">
+<div><b id="ow">240</b><span>總水量 g</span></div>
+<div><b id="ob">30</b><span>悶蒸水量 g</span></div>
+<div><b id="oc">1</b><span>約幾杯 (240ml)</span></div>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="t4">
+<h2 id="t4">常見問題</h2>
+<dl>
+<dt>咖啡太酸怎麼辦？</dt><dd>研磨再細一點，或把水溫調高 1–2 度。</dd>
+<dt>咖啡太苦怎麼辦？</dt><dd>研磨再粗一點，或縮短總時間。</dd>
+<dt>為什麼要悶蒸？</dt><dd>熱水讓咖啡粉釋出氣體，後面注水才會均勻萃取。</dd>
+<dt>沒有電子秤可以嗎？</dt><dd>可以，但用秤才能穩定重現好味道，建議準備一個。</dd>
+</dl>
+</section>
+<footer>這是一個學習用的示範網站。</footer>
+</main>
+
+<script>
+const steps=[
+{t:"準備",b:"<p>備齊以下器具與材料：</p><ul><li>濾杯、濾紙、咖啡壺、細口壺</li><li>咖啡豆 15 g、熱水 240 g</li><li>電子秤與計時器</li></ul>"},
+{t:"研磨",b:"<p>將咖啡豆磨成<b>中細研磨</b>，大小像細砂糖。現磨香氣最好。</p>"},
+{t:"濕潤濾紙",b:"<p>把濾紙放入濾杯，用熱水沖濕一圈，再倒掉壺中的水。這能去除紙味並預熱器具。</p>"},
+{t:"悶蒸",b:"<p>倒入咖啡粉並抹平，注入約 30 g 熱水，讓粉全部濕潤，等待 30 秒。</p>"},
+{t:"注水",b:"<ul><li>0:30 開始，由中心向外繞圈注水</li><li>1:00 時累計 150 g</li><li>1:30 時累計 240 g，之後停止注水</li></ul>"},
+{t:"完成",b:"<p>約 2:30 左右水流完。移開濾杯，輕輕搖勻咖啡，倒入杯中享用。</p>"}
+];
+const tabs=document.getElementById('tabs'),body=document.getElementById('stepbody');
+steps.forEach((s,i)=>{const b=document.createElement('button');b.role='tab';b.textContent=(i+1)+'. '+s.t;b.onclick=()=>show(i);tabs.appendChild(b)});
+function show(i){[...tabs.children].forEach((b,j)=>b.setAttribute('aria-selected',i===j));body.innerHTML='<h3>'+steps[i].t+'</h3>'+steps[i].b}
+show(0);
+
+// timer: [秒, 目標水量, 提示]
+const plan=[[0,0,"先把粉放入濾杯，準備注水。"],[1,30,"注入 30 g，讓粉全部濕潤（悶蒸）。"],[30,30,"悶蒸結束，準備開始繞圈注水。"],[31,150,"由中心向外繞圈，穩定注水。"],[60,150,"已到 150 g，稍停一下。"],[61,240,"繼續注水到 240 g。"],[90,240,"停止注水，等待水流完。"],[150,240,"完成！搖勻後享用。"]];
+let t=0,timer=null;
+const $=id=>document.getElementById(id);
+function render(){
+ let cur=plan[0];for(const p of plan){if(t>=p[0])cur=p}
+ let w=0;
+ for(let i=0;i<plan.length-1;i++){const a=plan[i],b=plan[i+1];if(t>=a[0]&&t<b[0]){w=a[1]+(b[1]-a[1])*(t-a[0])/(b[0]-a[0]);break}if(t>=b[0])w=b[1]}
+ $('clock').textContent=Math.floor(t/60)+':'+String(t%60).padStart(2,'0');
+ $('target').textContent='目標水量：'+Math.round(w)+' g';
+ $('hint').textContent=cur[2];
+ const h=(w/240)*80;
+ $('fill').setAttribute('y',228-h);$('fill').setAttribute('height',h);
+ $('drop').setAttribute('opacity',(w>0&&t<150&&t%2===0)?1:0);
+}
+$('go').onclick=()=>{
+ if(timer){clearInterval(timer);timer=null;$('go').textContent='繼續';return}
+ $('go').textContent='暫停';
+ timer=setInterval(()=>{t++;render();if(t>=150){clearInterval(timer);timer=null;$('go').textContent='開始'}},1000);
+};
+$('reset').onclick=()=>{clearInterval(timer);timer=null;t=0;$('go').textContent='開始';render()};
+render();
+
+function calc(){
+ const g=+$('g').value,r=+$('r').value;
+ $('gv').textContent=g;$('rv').textContent=r;
+ const w=g*r;
+ $('ow').textContent=w;$('ob').textContent=g*2;$('oc').textContent=(w/240).toFixed(1);
+}
+$('g').oninput=calc;$('r').oninput=calc;calc();
+</script>
+</body>
+</html>
